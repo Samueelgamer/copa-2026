@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copa do Mundo 2026 - A Maior de Todas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --primary-red: #FF0040;
+            --deep-blue: #001F3F;
+            --gold: #FFD700;
+            --grass-green: #00C851;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .font-bebas {
+            font-family: 'Bebas Neue', sans-serif;
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #FF0040 0%, #FFD700 50%, #00C851 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stadium-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .stadium-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(255, 0, 64, 0.3);
+        }
+        
+        .match-card {
+            background: linear-gradient(135deg, rgba(255,0,64,0.1) 0%, rgba(0,31,63,0.1) 100%);
+            border-left: 4px solid var(--primary-red);
+        }
+        
+        .countdown-item {
+            background: rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .hero-bg {
+            background: radial-gradient(circle at center, rgba(255,0,64,0.15) 0%, transparent 70%),
+                        linear-gradient(to bottom, #0a0a0a 0%, #001F3F 100%);
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .rotate-slow {
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,0,64,0.5); }
+            50% { box-shadow: 0 0 40px rgba(255,0,64,0.8); }
+        }
+        
+        .tab-active {
+            background: var(--primary-red);
+            color: white;
+        }
+        
+        .country-flag {
+            font-size: 2rem;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+        }
+        
+        .timeline-line {
+            background: linear-gradient(to bottom, var(--primary-red), var(--gold), var(--grass-green));
+        }
+        
+        .hover-lift {
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-5px);
+        }
+        
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Noise Overlay -->
+    <div class="noise"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-40 top-0 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-red-600 to-red-800 rounded-full flex items-center justify-center pulse-glow">
+                        <span class="text-white font-bold text-lg">26</span>
+                    </div>
+                    <span class="font-bebas text-2xl tracking-wider">FIFA WORLD CUP</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#inicio" class="hover:text-red-500 transition-colors">Início</a>
+                    <a href="#sedes" class="hover:text-red-500 transition-colors">Sedes</a>
+                    <a href="#calendario" class="hover:text-red-500 transition-colors">Calendário</a>
+                    <a href="#brasil" class="hover:text-red-500 transition-colors">Brasil</a>
+                    <a href="#formato" class="hover:text-red-500 transition-colors">Formato</a>
+                </div>
+                <button onclick="toggleMobileMenu()" class="md:hidden text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-black/95 backdrop-blur-lg border-t border-white/10">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="#inicio" class="block py-3 hover:text-red-500">Início</a>
+                <a href="#sedes" class="block py-3 hover:text-red-500">Sedes</a>
+                <a href="#calendario" class="block py-3 hover:text-red-500">Calendário</a>
+                <a href="#brasil" class="block py-3 hover:text-red-500">Brasil</a>
+                <a href="#formato" class="block py-3 hover:text-red-500">Formato</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="relative min-h-screen flex items-center justify-center hero-bg overflow-hidden pt-20">
+        <!-- Background Elements -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute top-20 left-10 w-64 h-64 bg-red-600/20 rounded-full blur-3xl floating"></div>
+            <div class="absolute bottom-20 right-10 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl floating" style="animation-delay: 2s;"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-white/5 rounded-full rotate-slow"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-white/10 rounded-full rotate-slow" style="animation-direction: reverse;"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="mb-6 inline-block">
+                <span class="px-4 py-2 rounded-full bg-white/10 border border-white/20 text-sm font-semibold tracking-wider uppercase animate-pulse">
+                    11 de Junho - 19 de Julho de 2026
+                </span>
+            </div>
+            
+            <h1 class="font-bebas text-7xl md:text-9xl lg:text-[12rem] leading-none mb-6 tracking-tight">
+                <span class="block text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-400">COPA DO</span>
+                <span class="block text-gradient">MUNDO 2026</span>
+            </h1>
+            
+            <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-12 font-light">
+                A maior edição da história. 48 seleções, 3 países, 16 sedes, 104 jogos. 
+                <span class="text-red-500 font-semibold">Estados Unidos, Canadá e México</span> se unem para receber o mundo.
+            </p>
+
+            <!-- Countdown -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto mb-12">
+                <div class="countdown-item rounded-2xl p-6 text-center">
+                    <div id="days" class="font-bebas text-5xl md:text-6xl text-red-500">000</div>
+                    <div class="text-sm uppercase tracking-wider text-gray-400">Dias</div>
+                </div>
+                <div class="countdown-item rounded-2xl p-6 text-center">
+                    <div id="hours" class="font-bebas text-5xl md:text-6xl text-white">00</div>
+                    <div class="text-sm uppercase tracking-wider text-gray-400">Horas</div>
+                </div>
+                <div class="countdown-item rounded-2xl p-6 text-center">
+                    <div id="minutes" class="font-bebas text-5xl md:text-6xl text-white">00</div>
+                    <div class="text-sm uppercase tracking-wider text-gray-400">Minutos</div>
+                </div>
+                <div class="countdown-item rounded-2xl p-6 text-center">
+                    <div id="seconds" class="font-bebas text-5xl md:text-6xl text-yellow-400">00</div>
+                    <div class="text-sm uppercase tracking-wider text-gray-400">Segundos</div>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#calendario" class="px-8 py-4 bg-red-600 hover:bg-red-700 rounded-full font-bold text-lg transition-all hover:scale-105 pulse-glow">
+                    Ver Calendário
+                </a>
+                <a href="#sedes" class="px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/30 rounded-full font-bold text-lg transition-all hover:scale-105">
+                    Explorar Sedes
+                </a>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+        </div>
+    </section>
+
+    <!-- Statistics Bar -->
+    <section class="py-12 bg-black border-y border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="stat-item">
+                    <div class="font-bebas text-5xl text-red-500 mb-2">48</div>
+                    <div class="text-gray-400 uppercase tracking-wider text-sm">Seleções</div>
+                </div>
+                <div class="stat-item">
+                    <div class="font-bebas text-5xl text-white mb-2">104</div>
+                    <div class="text-gray-400 uppercase tracking-wider text-sm">Jogos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="font-bebas text-5xl text-yellow-400 mb-2">16</div>
+                    <div class="text-gray-400 uppercase tracking-wider text-sm">Sedes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="font-bebas text-5xl text-green-500 mb-2">39</div>
+                    <div class="text-gray-400 uppercase tracking-wider text-sm">Dias</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Host Countries -->
+    <section class="py-24 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="font-bebas text-6xl md:text-8xl text-center mb-16 text-gradient">3 PAÍSES, 1 SONHO</h2>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- USA -->
+                <div class="glass-card rounded-3xl p-8 hover-lift group cursor-pointer" onclick="showCountryInfo('usa')">
+                    <div class="h-48 bg-gradient-to-br from-blue-900 to-blue-700 rounded-2xl mb-6 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMSIvPjwvc3ZnPg==')] opacity-30"></div>
+                        <span class="text-6xl">🇺🇸</span>
+                    </div>
+                    <h3 class="font-bebas text-4xl mb-2">ESTADOS UNIDOS</h3>
+                    <p class="text-gray-400 mb-4">11 cidades-sede • 78 jogos</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-blue-600/30 rounded-full text-xs">Nova York</span>
+                        <span class="px-3 py-1 bg-blue-600/30 rounded-full text-xs">Los Angeles</span>
+                        <span class="px-3 py-1 bg-blue-600/30 rounded-full text-xs">Miami</span>
+                        <span class="px-3 py-1 bg-blue-600/30 rounded-full text-xs">+8</span>
+                    </div>
+                    <div class="mt-4 text-red-500 font-semibold group-hover:translate-x-2 transition-transform">Ver sedes →</div>
+                </div>
+
+                <!-- Mexico -->
+                <div class="glass-card rounded-3xl p-8 hover-lift group cursor-pointer" onclick="showCountryInfo('mexico')">
+                    <div class="h-48 bg-gradient-to-br from-green-900 to-red-800 rounded-2xl mb-6 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMSIvPjwvc3ZnPg==')] opacity-30"></div>
+                        <span class="text-6xl">🇲🇽</span>
+                    </div>
+                    <h3 class="font-bebas text-4xl mb-2">MÉXICO</h3>
+                    <p class="text-gray-400 mb-4">3 cidades-sede • 13 jogos</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-green-600/30 rounded-full text-xs">Cidade do México</span>
+                        <span class="px-3 py-1 bg-green-600/30 rounded-full text-xs">Guadalajara</span>
+                        <span class="px-3 py-1 bg-green-600/30 rounded-full text-xs">Monterrey</span>
+                    </div>
+                    <div class="mt-4 text-red-500 font-semibold group-hover:translate-x-2 transition-transform">Ver sedes →</div>
+                </div>
+
+                <!-- Canada -->
+                <div class="glass-card rounded-3xl p-8 hover-lift group cursor-pointer" onclick="showCountryInfo('canada')">
+                    <div class="h-48 bg-gradient-to-br from-red-900 to-white/20 rounded-2xl mb-6 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMSIvPjwvc3ZnPg==')] opacity-30"></div>
+                        <span class="text-6xl">🇨🇦</span>
+                    </div>
+                    <h3 class="font-bebas text-4xl mb-2">CANADÁ</h3>
+                    <p class="text-gray-400 mb-4">2 cidades-sede • 13 jogos</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-red-600/30 rounded-full text-xs">Toronto</span>
+                        <span class="px-3 py-1 bg-red-600/30 rounded-full text-xs">Vancouver</span>
+                    </div>
+                    <div class="mt-4 text-red-500 font-semibold group-hover:translate-x-2 transition-transform">Ver sedes →</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stadiums Section -->
+    <section id="sedes" class="py-24 bg-gradient-to-b from-black to-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-bebas text-6xl md:text-8xl mb-4">AS 16 SEDES</h2>
+                <p class="text-xl text-gray-400">Estádios icônicos prontos para receber o mundo</p>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button onclick="filterStadiums('all')" class="px-6 py-2 rounded-full bg-red-600 text-white font-semibold transition-all hover:scale-105" id="btn-all">Todas</button>
+                <button onclick="filterStadiums('usa')" class="px-6 py-2 rounded-full bg-white/10 text-white font-semibold transition-all hover:scale-105 hover:bg-white/20" id="btn-usa">🇺🇸 EUA</button>
+                <button onclick="filterStadiums('mexico')" class="px-6 py-2 rounded-full bg-white/10 text-white font-semibold transition-all hover:scale-105 hover:bg-white/20" id="btn-mexico">🇲🇽 México</button>
+                <button onclick="filterStadiums('canada')" class="px-6 py-2 rounded-full bg-white/10 text-white font-semibold transition-all hover:scale-105 hover:bg-white/20" id="btn-canada">🇨🇦 Canadá</button>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="stadiums-grid">
+                <!-- Stadiums will be populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Brazil Section -->
+    <section id="brasil" class="py-24 relative overflow-hidden bg-gradient-to-br from-green-900/20 via-black to-yellow-900/20">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0iI2ZmZDcwMCIgZmlsbC1vcGFjaXR5PSIwLjA1Ii8+PC9zdmc+')] opacity-20"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="inline-block px-4 py-2 bg-green-600/20 border border-green-500/30 rounded-full text-green-400 font-semibold mb-6">
+                        🇧🇷 SELEÇÃO BRASILEIRA
+                    </div>
+                    <h2 class="font-bebas text-6xl md:text-8xl mb-6 leading-none">
+                        O SONHO DO<br>
+                        <span class="text-yellow-400">HEXACAMPEONATO</span>
+                    </h2>
+                    <p class="text-xl text-gray-300 mb-8">
+                        O Brasil está no <strong>Grupo C</strong> e estreia dia 13 de junho em Nova York. 
+                        A caminhada rumo ao sexto título mundial passa por três cidades americanas.
+                    </p>
+
+                    <div class="space-y-4 mb-8">
+                        <div class="match-card rounded-xl p-6 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer" onclick="toggleMatchDetails('match1')">
+                            <div class="flex items-center gap-4">
+                                <div class="text-2xl font-bold text-red-500">13/06</div>
+                                <div>
+                                    <div class="font-bold text-lg">Brasil × Marrocos</div>
+                                    <div class="text-sm text-gray-400">MetLife Stadium, Nova York • 19h (Brasília)</div>
+                                </div>
+                            </div>
+                            <div class="text-2xl">🇧🇷 × 🇲🇦</div>
+                        </div>
+                        
+                        <div class="match-card rounded-xl p-6 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer" onclick="toggleMatchDetails('match2')">
+                            <div class="flex items-center gap-4">
+                                <div class="text-2xl font-bold text-red-500">19/06</div>
+                                <div>
+                                    <div class="font-bold text-lg">Brasil × Haiti</div>
+                                    <div class="text-sm text-gray-400">Lincoln Financial Field, Filadélfia • 22h (Brasília)</div>
+                                </div>
+                            </div>
+                            <div class="text-2xl">🇧🇷 × 🇭🇹</div>
+                        </div>
+                        
+                        <div class="match-card rounded-xl p-6 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer" onclick="toggleMatchDetails('match3')">
+                            <div class="flex items-center gap-4">
+                                <div class="text-2xl font-bold text-red-500">24/06</div>
+                                <div>
+                                    <div class="font-bold text-lg">Escócia × Brasil</div>
+                                    <div class="text-sm text-gray-400">Hard Rock Stadium, Miami • 19h (Brasília)</div>
+                                </div>
+                            </div>
+                            <div class="text-2xl">🏴󠁧󠁢󠁳󠁣󠁴󠁿 × 🇧🇷</div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <div class="text-center px-6 py-4 bg-white/5 rounded-2xl border border-white/10">
+                            <div class="font-bebas text-3xl text-yellow-400">5</div>
+                            <div class="text-xs text-gray-400 uppercase">Títulos</div>
+                        </div>
+                        <div class="text-center px-6 py-4 bg-white/5 rounded-2xl border border-white/10">
+                            <div class="font-bebas text-3xl text-green-400">22</div>
+                            <div class="text-xs text-gray-400 uppercase">Copas</div>
+                        </div>
+                        <div class="text-center px-6 py-4 bg-white/5 rounded-2xl border border-white/10">
+                            <div class="font-bebas text-3xl text-red-400">#5</div>
+                            <div class="text-xs text-gray-400 uppercase">Ranking FIFA</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <div class="absolute inset-0 bg-gradient-to-r from-green-500/20 to-yellow-500/20 rounded-3xl blur-3xl"></div>
+                    <div class="relative glass-card rounded-3xl p-8 border border-white/10">
+                        <h3 class="font-bebas text-3xl mb-6 text-center">GRUPO C</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl border-l-4 border-green-500">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-3xl">🇧🇷</span>
+                                    <span class="font-bold">Brasil</span>
+                                </div>
+                                <span class="text-sm text-gray-400">Cabeça de chave</span>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl border-l-4 border-red-500">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-3xl">🇲🇦</span>
+                                    <span class="font-bold">Marrocos</span>
+                                </div>
+                                <span class="text-sm text-gray-400">Semifinalista 2022</span>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl border-l-4 border-blue-500">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-3xl">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
+                                    <span class="font-bold">Escócia</span>
+                                </div>
+                                <span class="text-sm text-gray-400">Eliminatórias</span>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl border-l-4 border-blue-400">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-3xl">🇭🇹</span>
+                                    <span class="font-bold">Haiti</span>
+                                </div>
+                                <span class="text-sm text-gray-400">Repescagem</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Format Section -->
+    <section id="formato" class="py-24 bg-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="font-bebas text-6xl md:text-8xl text-center mb-16">NOVO FORMATO</h2>
+            
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <div class="glass-card rounded-3xl p-8 text-center relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-b from-red-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="relative z-10">
+                        <div class="w-20 h-20 mx-auto mb-6 bg-red-600/20 rounded-full flex items-center justify-center text-4xl">📊</div>
+                        <h3 class="font-bebas text-3xl mb-4">12 GRUPOS</h3>
+                        <p class="text-gray-400">48 seleções divididas em 12 grupos de 4 times cada. Os 2 primeiros de cada grupo se classificam.</p>
+                    </div>
+                </div>
+                
+                <div class="glass-card rounded-3xl p-8 text-center relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-b from-yellow-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="relative z-10">
+                        <div class="w-20 h-20 mx-auto mb-6 bg-yellow-600/20 rounded-full flex items-center justify-center text-4xl">⚔️</div>
+                        <h3 class="font-bebas text-3xl mb-4">32-AVOS</h3>
+                        <p class="text-gray-400">Nova fase eliminatória! Os 24 classificados dos grupos + 8 melhores terceiros colocados.</p>
+                    </div>
+                </div>
+                
+                <div class="glass-card rounded-3xl p-8 text-center relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-b from-green-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="relative z-10">
+                        <div class="w-20 h-20 mx-auto mb-6 bg-green-600/20 rounded-full flex items-center justify-center text-4xl">🏆</div>
+                        <h3 class="font-bebas text-3xl mb-4">104 JOGOS</h3>
+                        <p class="text-gray-400">O maior torneio da história! 40 jogos a mais que a edição de 2022 no Catar.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tournament Timeline -->
+            <div class="relative">
+                <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 timeline-line rounded-full hidden md:block"></div>
+                
+                <div class="space-y-12">
+                    <div class="relative flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0">
+                            <h4 class="font-bebas text-3xl text-red-500">FASE DE GRUPOS</h4>
+                            <p class="text-gray-400">11 - 27 de Junho • 72 jogos</p>
+                        </div>
+                        <div class="w-4 h-4 bg-red-500 rounded-full border-4 border-black z-10 hidden md:block"></div>
+                        <div class="md:w-1/2 md:pl-12">
+                            <div class="glass-card p-6 rounded-xl">Todos contra todos dentro dos grupos. Os dois primeiros avançam direto, os terceiros disputam vagas restantes.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="relative flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0 order-1 md:order-1">
+                            <div class="glass-card p-6 rounded-xl">Mata-mata inicial com 32 equipes. Jogos únicos, perdeu está fora.</div>
+                        </div>
+                        <div class="w-4 h-4 bg-yellow-500 rounded-full border-4 border-black z-10 hidden md:block order-2 md:order-2"></div>
+                        <div class="md:w-1/2 md:pl-12 order-3 md:order-3">
+                            <h4 class="font-bebas text-3xl text-yellow-500">32-AVOS DE FINAL</h4>
+                            <p class="text-gray-400">28 Junho - 3 Julho • 16 jogos</p>
+                        </div>
+                    </div>
+                    
+                    <div class="relative flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0">
+                            <h4 class="font-bebas text-3xl text-yellow-400">OITAVAS DE FINAL</h4>
+                            <p class="text-gray-400">4 - 7 de Julho • 8 jogos</p>
+                        </div>
+                        <div class="w-4 h-4 bg-yellow-400 rounded-full border-4 border-black z-10 hidden md:block"></div>
+                        <div class="md:w-1/2 md:pl-12">
+                            <div class="glass-card p-6 rounded-xl">As 16 melhores equipes disputam vagas nas quartas.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="relative flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0 order-1 md:order-1">
+                            <div class="glass-card p-6 rounded-xl">As quartas definem os semifinalistas em jogos eletrizantes.</div>
+                        </div>
+                        <div class="w-4 h-4 bg-green-400 rounded-full border-4 border-black z-10 hidden md:block order-2 md:order-2"></div>
+                        <div class="md:w-1/2 md:pl-12 order-3 md:order-3">
+                            <h4 class="font-bebas text-3xl text-green-400">QUARTAS DE FINAL</h4>
+                            <p class="text-gray-400">9 - 12 de Julho • 4 jogos</p>
+                        </div>
+                    </div>
+                    
+                    <div class="relative flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0">
+                            <h4 class="font-bebas text-3xl text-green-500">SEMIFINAIS</h4>
+                            <p class="text-gray-400">14 - 15 de Julho • 2 jogos</p>
+                        </div>
+                        <div class="w-4 h-4 bg-green-500 rounded-full border-4 border-black z-10 hidden md:block"></div>
+                        <div class="md:w-1/2 md:pl-12">
+                            <div class="glass-card p-6 rounded-xl">Dallas e Atlanta recebem as semifinais que definirão os finalistas.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="relative flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0 order-1 md:order-1">
+                            <div class="glass-card p-6 rounded-xl border-2 border-yellow-500/50 bg-yellow-500/10">
+                                <div class="text-yellow-500 font-bold mb-2">GRANDE FINAL</div>
+                                MetLife Stadium, Nova Jersey • 19 de Julho • 18h (Brasília)
+                            </div>
+                        </div>
+                        <div class="w-6 h-6 bg-yellow-500 rounded-full border-4 border-black z-10 hidden md:block pulse-glow order-2 md:order-2"></div>
+                        <div class="md:w-1/2 md:pl-12 order-3 md:order-3">
+                            <h4 class="font-bebas text-5xl text-gradient">A FINAL</h4>
+                            <p class="text-gray-400">19 de Julho de 2026</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendar Section -->
+    <section id="calendario" class="py-24 bg-gradient-to-b from-gray-900 to-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="font-bebas text-6xl md:text-8xl text-center mb-4">CALENDÁRIO</h2>
+            <p class="text-center text-gray-400 mb-12 text-lg">Datas e horários oficiais da FIFA (horário de Brasília)</p>
+            
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button onclick="showPhase('groups')" class="px-6 py-3 rounded-full bg-red-600 text-white font-bold transition-all hover:scale-105 tab-btn" id="tab-groups">Fase de Grupos</button>
+                <button onclick="showPhase('knockout')" class="px-6 py-3 rounded-full bg-white/10 text-white font-bold transition-all hover:scale-105 hover:bg-white/20 tab-btn" id="tab-knockout">Mata-Mata</button>
+                <button onclick="showPhase('finals')" class="px-6 py-3 rounded-full bg-white/10 text-white font-bold transition-all hover:scale-105 hover:bg-white/20 tab-btn" id="tab-finals">Finais</button>
+            </div>
+
+            <div id="calendar-content" class="glass-card rounded-3xl p-8 min-h-[400px]">
+                <!-- Content populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-white/10 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-8 h-8 bg-gradient-to-br from-red-600 to-red-800 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">26</span>
+                        </div>
+                        <span class="font-bebas text-xl">FIFA WORLD CUP 2026</span>
+                    </div>
+                    <p class="text-gray-500 text-sm">A maior celebração do futebol mundial. Unidos por um sonho.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 text-white">Links Rápidos</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#inicio" class="hover:text-red-500 transition-colors">Início</a></li>
+                        <li><a href="#sedes" class="hover:text-red-500 transition-colors">Sedes</a></li>
+                        <li><a href="#calendario" class="hover:text-red-500 transition-colors">Calendário</a></li>
+                        <li><a href="#brasil" class="hover:text-red-500 transition-colors">Brasil</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 text-white">Sedes</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li>🇺🇸 Estados Unidos (11)</li>
+                        <li>🇲🇽 México (3)</li>
+                        <li>🇨🇦 Canadá (2)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 text-white">Datas Importantes</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li>Abertura: 11/06/2026</li>
+                        <li>Final: 19/07/2026</li>
+                        <li>104 jogos totais</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 text-center text-gray-600 text-sm">
+                <p>© 2026 FIFA World Cup. Site não oficial criado para fins educacionais.</p>
+                <p class="mt-2">Dados baseados em informações oficiais da FIFA.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Stadiums Data
+        const stadiums = [
+            { name: "MetLife Stadium", city: "Nova York/New Jersey", country: "usa", capacity: "82.500", image: "🏟️", matches: "Final + 6 jogos", flag: "🇺🇸" },
+            { name: "AT&T Stadium", city: "Dallas", country: "usa", capacity: "80.000", image: "🏟️", matches: "9 jogos (mais do torneio)", flag: "🇺🇸" },
+            { name: "SoFi Stadium", city: "Los Angeles", country: "usa", capacity: "70.000", image: "🏟️", matches: "8 jogos", flag: "🇺🇸" },
+            { name: "Mercedes-Benz Stadium", city: "Atlanta", country: "usa", capacity: "71.000", image: "🏟️", matches: "Semifinal + 5 jogos", flag: "🇺🇸" },
+            { name: "Hard Rock Stadium", city: "Miami", country: "usa", capacity: "65.000", image: "🏟️", matches: "3º lugar + 6 jogos", flag: "🇺🇸" },
+            { name: "Estádio Azteca", city: "Cidade do México", country: "mexico", capacity: "83.000", image: "🏟️", matches: "Abertura + 4 jogos", flag: "🇲🇽", special: "3ª Copa no estádio!" },
+            { name: "Estádio BBVA", city: "Monterrey", country: "mexico", capacity: "53.000", image: "🏟️", matches: "4 jogos", flag: "🇲🇽" },
+            { name: "Estádio Akron", city: "Guadalajara", country: "mexico", capacity: "45.000", image: "🏟️", matches: "4 jogos", flag: "🇲🇽" },
+            { name: "BC Place", city: "Vancouver", country: "canada", capacity: "54.500", image: "🏟️", matches: "7 jogos", flag: "🇨🇦" },
+            { name: "BMO Field", city: "Toronto", country: "canada", capacity: "45.000", image: "🏟️", matches: "6 jogos", flag: "🇨🇦" },
+            { name: "Lumen Field", city: "Seattle", country: "usa", capacity: "68.000", image: "🏟️", matches: "6 jogos", flag: "🇺🇸" },
+            { name: "Levi's Stadium", city: "São Francisco", country: "usa", capacity: "68.000", image: "🏟️", matches: "6 jogos", flag: "🇺🇸" },
+            { name: "Gillette Stadium", city: "Boston", country: "usa", capacity: "65.000", image: "🏟️", matches: "6 jogos", flag: "🇺🇸" },
+            { name: "Lincoln Financial Field", city: "Filadélfia", country: "usa", capacity: "67.000", image: "🏟️", matches: "6 jogos", flag: "🇺🇸" },
+            { name: "NRG Stadium", city: "Houston", country: "usa", capacity: "73.000", image: "🏟️", matches: "7 jogos", flag: "🇺🇸" },
+            { name: "Arrowhead Stadium", city: "Kansas City", country: "usa", capacity: "73.000", image: "🏟️", matches: "6 jogos", flag: "🇺🇸" }
+        ];
+
+        // Calendar Data
+        const calendarData = {
+            groups: [
+                { date: "11/06", time: "18h", match: "México x África do Sul", stadium: "Estádio Azteca", group: "A" },
+                { date: "12/06", time: "16h", match: "Canadá x Repescagem", stadium: "BMO Field", group: "B" },
+                { date: "12/06", time: "22h", match: "EUA x Paraguai", stadium: "SoFi Stadium", group: "D" },
+                { date: "13/06", time: "19h", match: "Brasil x Marrocos", stadium: "MetLife Stadium", group: "C", highlight: true },
+                { date: "13/06", time: "22h", match: "Haiti x Escócia", stadium: "Gillette Stadium", group: "C" },
+                { date: "14/06", time: "15h", match: "Alemanha x Curaçao", stadium: "NRG Stadium", group: "E" },
+                { date: "15/06", time: "13h", match: "Espanha x Cabo Verde", stadium: "Mercedes-Benz Stadium", group: "H" },
+                { date: "16/06", time: "16h", match: "França x Senegal", stadium: "MetLife Stadium", group: "I" },
+                { date: "16/06", time: "22h", match: "Argentina x Argélia", stadium: "Arrowhead Stadium", group: "J" },
+                { date: "17/06", time: "18h", match: "Inglaterra x Croácia", stadium: "AT&T Stadium", group: "L" }
+            ],
+            knockout: [
+                { date: "28/06 - 03/07", phase: "32-avos de Final", description: "16 jogos eliminatórios", details: "2ºA x 2ºB, 1ºE x 3º, 1ºF x 2ºC, etc." },
+                { date: "04/07 - 07/07", phase: "Oitavas de Final", description: "8 jogos", details: "Vencedores dos 32-avos se enfrentam" },
+                { date: "09/07 - 12/07", phase: "Quartas de Final", description: "4 jogos", details: "Boston, Los Angeles, Miami, Kansas City" }
+            ],
+            finals: [
+                { date: "14/07", time: "20h", match: "Semifinal 1", stadium: "AT&T Stadium, Dallas", icon: "⚔️" },
+                { date: "15/07", time: "19h", match: "Semifinal 2", stadium: "Mercedes-Benz Stadium, Atlanta", icon: "⚔️" },
+                { date: "18/07", time: "17h", match: "Disputa 3º Lugar", stadium: "Hard Rock Stadium, Miami", icon: "🥉" },
+                { date: "19/07", time: "18h", match: "GRANDE FINAL", stadium: "MetLife Stadium, Nova Jersey", icon: "🏆", highlight: true }
+            ]
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderStadiums('all');
+            startCountdown();
+            showPhase('groups');
+            initScrollAnimations();
+        });
+
+        // Countdown Timer
+        function startCountdown() {
+            const targetDate = new Date('June 11, 2026 15:00:00').getTime();
+            
+            setInterval(() => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+                
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                document.getElementById('days').textContent = String(days).padStart(3, '0');
+                document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+            }, 1000);
+        }
+
+        // Stadiums Filter
+        function filterStadiums(country) {
+            // Update buttons
+            ['all', 'usa', 'mexico', 'canada'].forEach(c => {
+                const btn = document.getElementById(`btn-${c}`);
+                if (c === country) {
+                    btn.classList.remove('bg-white/10');
+                    btn.classList.add('bg-red-600');
+                } else {
+                    btn.classList.add('bg-white/10');
+                    btn.classList.remove('bg-red-600');
+                }
+            });
+            
+            renderStadiums(country);
+        }
+
+        function renderStadiums(filter) {
+            const grid = document.getElementById('stadiums-grid');
+            grid.innerHTML = '';
+            
+            const filtered = filter === 'all' ? stadiums : stadiums.filter(s => s.country === filter);
+            
+            filtered.forEach((stadium, index) => {
+                const card = document.createElement('div');
+                card.className = 'stadium-card glass-card rounded-2xl p-6 relative overflow-hidden group cursor-pointer';
+                card.style.animationDelay = `${index * 0.1}s`;
+                
+                card.innerHTML = `
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/5 to-transparent rounded-bl-full"></div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-4xl">${stadium.flag}</span>
+                        ${stadium.special ? `<span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded-full font-bold">${stadium.special}</span>` : ''}
+                    </div>
+                    <h3 class="font-bebas text-2xl mb-1">${stadium.name}</h3>
+                    <p class="text-gray-400 text-sm mb-4">${stadium.city}</p>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-gray-500">🏟️ ${stadium.capacity}</span>
+                        <span class="text-red-400">${stadium.matches}</span>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-white/10 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span class="text-xs text-gray-500">Clique para detalhes</span>
+                        <span class="text-red-500">→</span>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Calendar Tabs
+        function showPhase(phase) {
+            // Update buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-red-600');
+                btn.classList.add('bg-white/10');
+            });
+            document.getElementById(`tab-${phase}`).classList.remove('bg-white/10');
+            document.getElementById(`tab-${phase}`).classList.add('bg-red-600');
+            
+            const content = document.getElementById('calendar-content');
+            const data = calendarData[phase];
+            
+            if (phase === 'groups') {
+                content.innerHTML = `
+                    <div class="grid gap-4">
+                        ${data.map(item => `
+                            <div class="${item.highlight ? 'bg-red-600/20 border-red-500/50' : 'bg-white/5 border-white/10'} border rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-white/10 transition-colors cursor-pointer">
+                                <div class="flex items-center gap-4">
+                                    <div class="text-center min-w-[80px]">
+                                        <div class="font-bebas text-2xl ${item.highlight ? 'text-red-500' : 'text-white'}">${item.date}</div>
+                                        <div class="text-sm text-gray-400">${item.time}</div>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-lg ${item.highlight ? 'text-yellow-400' : 'text-white'}">${item.match}</div>
+                                        <div class="text-sm text-gray-400">${item.stadium}</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs">Grupo ${item.group}</span>
+                                    ${item.highlight ? '<span class="text-2xl">🔥</span>' : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="mt-6 text-center">
+                        <button class="text-red-500 hover:text-red-400 font-semibold">Ver calendário completo →</button>
+                    </div>
+                `;
+            } else if (phase === 'knockout') {
+                content.innerHTML = `
+                    <div class="grid gap-6">
+                        ${data.map(item => `
+                            <div class="bg-gradient-to-r from-white/5 to-transparent border-l-4 border-yellow-500 rounded-r-xl p-6 hover:bg-white/10 transition-colors">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div>
+                                        <div class="font-bebas text-3xl text-yellow-500 mb-2">${item.phase}</div>
+                                        <div class="text-gray-400 mb-2">${item.date}</div>
+                                        <div class="text-lg font-semibold">${item.description}</div>
+                                    </div>
+                                    <div class="text-sm text-gray-500 bg-black/30 px-4 py-2 rounded-lg">${item.details}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else {
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        ${data.map(item => `
+                            <div class="${item.highlight ? 'bg-gradient-to-r from-yellow-600/30 to-red-600/30 border-yellow-500' : 'bg-white/5 border-white/10'} border rounded-2xl p-6 flex items-center gap-6 hover:scale-[1.02] transition-transform cursor-pointer">
+                                <div class="text-4xl">${item.icon}</div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-1">
+                                        <span class="font-bebas text-2xl ${item.highlight ? 'text-yellow-400' : 'text-white'}">${item.date}</span>
+                                        <span class="text-gray-400">•</span>
+                                        <span class="text-gray-400">${item.time}</span>
+                                    </div>
+                                    <div class="font-bold text-xl ${item.highlight ? 'text-white' : ''}">${item.match}</div>
+                                    <div class="text-sm text-gray-400">${item.stadium}</div>
+                                </div>
+                                ${item.highlight ? '<div class="text-4xl">🏆</div>' : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+
+        // Mobile Menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Scroll Animations
+        function initScrollAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+            
+            gsap.from(".stat-item", {
+                scrollTrigger: {
+                    trigger: ".stat-item",
+                    start: "top 80%",
+                },
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.2
+            });
+            
+            gsap.from(".stadium-card", {
+                scrollTrigger: {
+                    trigger: "#stadiums-grid",
+                    start: "top 80%",
+                },
+                y: 50,
+                opacity: 0,
+                duration: 0.6,
+                stagger: 0.1
+            });
+        }
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-black/90', 'backdrop-blur-lg', 'border-b', 'border-white/10');
+            } else {
+                navbar.classList.remove('bg-black/90', 'backdrop-blur-lg', 'border-b', 'border-white/10');
+            }
+        });
+
+        // Show country info (placeholder for modal)
+        function showCountryInfo(country) {
+            const messages = {
+                usa: "EUA: 11 cidades-sede recebendo 78 jogos, incluindo todas as fases finais a partir das quartas.",
+                mexico: "México: 3 cidades históricas com 13 jogos. O Estádio Azteca sediará a abertura pela 3ª vez!",
+                canada: "Canadá: Estreia como anfitrião com 13 jogos em Toronto e Vancouver."
+            };
+            alert(messages[country]);
+        }
+
+        // Toggle match details
+        function toggleMatchDetails(matchId) {
+            // Animation for match card click
+            event.currentTarget.classList.add('scale-[1.02]');
+            setTimeout(() => {
+                event.currentTarget.classList.remove('scale-[1.02]');
+            }, 200);
+        }
+    </script>
+</body>
+</html>
